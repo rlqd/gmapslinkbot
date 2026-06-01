@@ -10,6 +10,14 @@ if (!token) {
 const bot = new Bot(token);
 const mapsAppUrlPattern = /^https:\/\/maps\.app\.goo\.gl\/[^\s<>"')]+$/i;
 
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
 function extractQueryFromLocation(location: string, baseUrl: string): string | null {
   const redirectUrl = new URL(location, baseUrl);
   const queryParams = redirectUrl.search.slice(1).split("&");
@@ -61,7 +69,8 @@ bot.on("message:text", async (ctx) => {
       const query = await resolveMapsAppQuery(link);
 
       if (query) {
-        await ctx.reply(query, {
+        await ctx.reply(`<a href="${escapeHtml(link)}">${escapeHtml(query)}</a>`, {
+          parse_mode: "HTML",
           reply_parameters: { message_id: ctx.message.message_id }
         });
       }
