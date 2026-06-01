@@ -1,7 +1,7 @@
 import { Bot, webhookCallback } from "grammy";
 import { Hono } from "hono";
 
-const token = Bun.env.BOT_TOKEN;
+const token = process.env.BOT_TOKEN;
 
 if (!token) {
   throw new Error("Missing BOT_TOKEN environment variable");
@@ -15,13 +15,21 @@ function extractQueryFromLocation(location: string, baseUrl: string): string | n
   const queryParams = redirectUrl.search.slice(1).split("&");
   const rawQuery = queryParams.find((param) => param.split("=", 1)[0] === "q");
 
-  if (!rawQuery) {
+  if (rawQuery) {
+    const value = rawQuery.slice(rawQuery.indexOf("=") + 1);
+
+    return decodeURIComponent(value.replaceAll("+", " "));
+  }
+
+  const pathParts = redirectUrl.pathname.split("/");
+  const placeIndex = pathParts.findIndex((part) => part.toLowerCase() === "place");
+  const placeName = placeIndex >= 0 ? pathParts[placeIndex + 1] : undefined;
+
+  if (!placeName) {
     return null;
   }
 
-  const value = rawQuery.slice(rawQuery.indexOf("=") + 1);
-
-  return decodeURIComponent(value.replaceAll("+", " "));
+  return decodeURIComponent(placeName.replaceAll("+", " "));
 }
 
 async function resolveMapsAppQuery(url: string): Promise<string | null> {
