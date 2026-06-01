@@ -21,3 +21,15 @@ Adjust `.env`, then run:
 ```sh
 bun run dev
 ```
+
+## Docker
+
+This bot can run in a docker container. Dockerfile included.
+
+## Webhooks
+
+Set `BOT_POLL=0` and `WEBHOOK_SECRET` to something random and webhooks will be used instead of long polling.
+
+Webhook endpoint is served under `http://0.0.0.0:8080/tg`.
+
+See for more details: https://grammy.dev/guide/deployment-types#how-to-use-webhooks
