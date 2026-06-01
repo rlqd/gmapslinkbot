@@ -1,6 +1,13 @@
-# gmapslinkbot
+# Google Maps Link Bot
 
-Telegram bot that watches text messages for `https://maps.app.goo.gl/` links, reads the first redirect without following it, extracts the `q` search parameter from the `Location` header, replaces `+` with spaces, and replies to the original message.
+Telegram bot that watches for `https://maps.app.goo.gl/` links and replies with a place name.
+
+## Why?
+
+Google Maps on iOS only share the short link without a place name.
+Telegram doesn't generate previews for them.
+
+This makes sharing more than 1 link frustrating and impossible to find it later in the history by place name.
 
 ## Setup
 
@@ -9,8 +16,8 @@ bun install
 cp .env.example .env
 ```
 
-Set `BOT_TOKEN` in `.env`, then run:
+Adjust `.env`, then run:
 
 ```sh
-bun run start
+bun run dev
 ```
